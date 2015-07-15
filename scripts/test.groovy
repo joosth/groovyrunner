@@ -32,8 +32,8 @@ test.run "Cleanup previous test home", {
     testHome=findNode("groovyrunner-tests")
     if (testHome) {
         nodeService.deleteNode(testHome)
+        assert !testHome.exists()
     }
-    assert !testHome.exists()
 }
 
 test.run "Create test home", {
@@ -293,9 +293,8 @@ test.run "randomName" , {
 
 test.run "Search" , {
     def result= search(query:'''@cm\\:name:"new-user-email.html.ftl" ''')
-    assert result.class==org.alfresco.repo.search.impl.lucene.SolrJSONResultSet
     assert result.numberFound==1
-    result.each {
+    result.each { 
         assert it.nodeRef.name=="new-user-email.html.ftl"
     }
     // TODO check paging and sorting
