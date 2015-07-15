@@ -1,0 +1,78 @@
+<?xml version="1.0"?>
+<!--
+  * Groovy runner module for Alresco
+  * (C) 2012-2015 Open-T B.V.
+  * 10 March 2012 Joost Horward
+  *
+  -->
+<project name="groovy-runner" default="deploy" basedir=".">
+	<!-- Overrule default properties -->
+	<property file="build.properties" />
+    <property file="version.properties" />
+
+	<!-- Default Properties -->
+	<property name="project.dir" value="." />
+	<property name="build.dir" value="${project.dir}/build" />
+	<property name="deploy.dir" value="${project.dir}/deploy" />
+
+	<property name="deploy.jarname" value="alfresco-${ant.project.name}.jar" />
+	<property name="lib.dir" value="${project.dir}/lib" />
+	<property name="alfresco.dir" value="/opt/alfresco" />
+	<property name="alfresco.app.dir" value="${alfresco.dir}/tomcat/webapps/alfresco" />
+	<property name="alfresco.share.dir" value="${alfresco.dir}/tomcat/webapps/share" />
+	<property name="alfresco.lib.dir" value="${alfresco.dir}/tomcat/webapps/alfresco/WEB-INF/lib" />
+
+	<path id="class.path">
+		<dirset dir="${build.dir}" />
+        <fileset dir="${alfresco.lib.dir}" includes="**/*.jar" />
+		<fileset dir="${lib.dir}" includes="**/*.jar"/>
+	</path>
+
+	<!-- Make build directories -->
+	<target name="mkdirs">
+		<mkdir dir="${build.dir}/build" />
+	</target>
+
+	<!-- Groovy stuff -->
+    <taskdef name="groovyc" classname="org.codehaus.groovy.ant.Groovyc" classpath="${lib.dir}/groovy-all.jar"/>
+
+	<!-- Compile classes -->
+	<target name="compile">
+		<groovyc classpathref="class.path" srcdir="${project.dir}/src" destdir="${build.dir}" listfiles="true" >
+			<javac classpathref="class.path"  debug="true" debuglevel="lines,vars,source" source="1.6" target="1.6"/>
+		</groovyc>
+	</target>
+
+	<!-- Package jar files for Alfresco core-->
+	<target name="package" depends="mkdirs,compile">
+        <copy todir="${build.dir}/org/open_t/alfresco/groovy/resources" >
+            <fileset dir="${project.dir}/resources" />
+        </copy>
+        <!-- overwrite @VERSION@ in index.html with version number -->
+        <replace file="${build.dir}/org/open_t/alfresco/groovy/resources/index.html" token="@VERSION@" value="${version}" />
+		<jar destfile="${project.dir}/webapps/alfresco/WEB-INF/lib/${deploy.jarname}">
+			<fileset dir="alfresco" includes="*/**" />
+			<fileset dir="${build.dir}" includes="*/**" />
+            <manifest>
+                <!-- Who is building this jar? -->
+                <attribute name="Built-By" value="${user.name}"/>
+                <!-- Information about the program itself -->
+                <attribute name="Implementation-Vendor" value="Open-T B.V."/>
+                <attribute name="Implementation-Title" value="GroovyRunner"/>
+                <attribute name="Implementation-Version" value="${version}"/>
+            </manifest>
+        </jar>
+	</target>
+
+	<!-- Deploy files to Alfresco core -->
+	<target name="deploy" depends="package" >
+		<copy todir="${alfresco.app.dir}">
+			<fileset dir="${project.dir}/webapps/alfresco" />
+		</copy>
+    </target>
+
+    <target name="clean">
+		<delete dir="${build.dir}" />
+		<delete dir="${deploy.dir}" />
+	</target>
+</project>

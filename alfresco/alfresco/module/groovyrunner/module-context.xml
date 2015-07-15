@@ -1,0 +1,63 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!--
+ * GroovyRunner webscript
+ * (C) 2012-2015 Open-T B.V.
+ *
+ * Started March 10, 2012 Joost Horward
+ -->
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN 2.0//EN"
+    "http://www.springframework.org/dtd/spring-beans-2.0.dtd">
+
+<beans>
+    <!-- GroovyRunner webscript -->
+    <bean id="webscript.org.open_t.groovyrunner.post"
+        class="org.open_t.alfresco.groovy.GroovyRunner" parent="webscript">
+        <property name="groovyRunnerService" ref="groovyRunnerService" />
+        <property name="requireAdmin" value="${groovyrunner.requireAdmin}" />
+	</bean>
+
+    <bean id="webscript.org.open_t.groovyrunner.get"
+		class="org.open_t.alfresco.groovy.GroovyRunnerResources" parent="webscript">
+	</bean>
+
+
+    <!-- This makes sure the metaclasses are all initialized. -->
+	 <bean id="groovyRunnerService"
+		class="org.open_t.alfresco.groovy.GroovyRunnerService" >
+		<property name="repository" ref="repositoryHelper" />
+		<property name="serviceRegistry" ref="ServiceRegistry" />
+		<property name="nodeService"        ref="NodeService" />
+		<property name="fileFolderService"  ref="FileFolderService" />
+		<property name="contentService" 	ref="ContentService" />
+		<property name="searchService"      ref="SearchService" />
+		<property name="namespaceService" ref="NamespaceService"/>
+		<property name="authenticationService" ref="AuthenticationService"/>
+		<property name="personService" ref="PersonService"/>
+		<property name="versionService" ref="VersionService"/>
+		<property name="copyService" ref="CopyService"/>
+		<property name="dictionaryService" ref="DictionaryService"/>
+		<property name="auditService" ref="AuditService"/>
+		<property name="registryService" ref="RegistryService"/>
+		<property name="repoAdminService" ref="RepoAdminService"/>
+		<property name="lockService" ref="LockService"/>
+		<property name="authorityService" ref="AuthorityService"/>
+        <property name="permissionService" ref="PermissionService"/>
+		<property name="siteService" ref="SiteService"/>
+	</bean>
+
+     <bean id="nodeRefMeta"
+		class="org.open_t.alfresco.groovy.NodeRefMeta" init-method="init">
+		<property name="groovyRunnerService" ref="groovyRunnerService" />
+        <property name="nodeService"        ref="NodeService" />
+        <property name="permissionService" ref="PermissionService"/>
+        <property name="namespaceService" ref="NamespaceService"/>
+	</bean>
+
+    <bean id="groovyRunner.testHelper" class="org.open_t.alfresco.groovy.TestHelper" scope="prototype" init-method="init">
+        <property name="groovyRunnerService" ref="groovyRunnerService" />
+    </bean>
+
+    <bean id="groovyRunner.httpHelper" class="org.open_t.alfresco.groovy.HttpHelper" scope="prototype" init-method="init">
+    </bean>
+
+</beans>

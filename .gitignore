@@ -1,0 +1,13 @@
+# Git ignore list for Alfresco project
+build.properties
+*.class
+*.war
+.classpath
+.project
+.settings
+/*.tmproj
+/build/**
+/files/**
+*~
+/webapps/**
+/nbproject/private/

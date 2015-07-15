@@ -1,0 +1,8 @@
+<webscript>
+	<shortname>Groovy Runner</shortname>
+	<description>Runs a groovy script against the repository</description>
+	<url>/open_t/groovyrunner</url>
+	<format default="">argument</format>	
+    <authentication>user</authentication>
+    <transaction>none</transaction>
+</webscript>

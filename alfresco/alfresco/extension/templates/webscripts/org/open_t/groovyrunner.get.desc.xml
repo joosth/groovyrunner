@@ -1,0 +1,9 @@
+<webscript>
+	<shortname>Groovy Runner resources</shortname>
+	<description>Provides HTML, CSS, JavaScript resources for GroovyRunner</description>
+	<url>/open_t/groovyrunner</url>
+    <url>/open_t/groovyrunner/{path}</url>
+	<format default="html">argument</format>
+    <authentication>user</authentication>
+    <transaction>none</transaction>
+</webscript>
